@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.6)
 project (BAP-HAE)
 
 set (CMAKE_CXX_STANDARD 11)
-set (SOURCE_FILES src/generalTools.cpp src/timeUtils.cpp src/crt.cpp src/hae.cpp)
+set (SOURCE_FILES src/bapTools.cpp src/timeUtils.cpp src/crt.cpp src/hae.cpp src/matching.cpp)
 set (CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
 # Configuration Profile
@@ -26,3 +26,5 @@ target_link_libraries(BAPHAE NTL GMP GF2X -lm -O2)
 
 add_executable(test_HAE test/haeTest.cpp)
 target_link_libraries(test_HAE BAPHAE -pthread)
+add_executable(test_Matching test/matchingTest.cpp)
+target_link_libraries(test_Matching BAPHAE -pthread)
