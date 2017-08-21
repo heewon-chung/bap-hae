@@ -12,6 +12,6 @@ const long RANDOMBITS = SECURITY;
 const ZZ MSGSPACE = conv<ZZ>((1 << SECURITY));
 const ZZ TAGSPACE = conv<ZZ>((1 << SECURITY));
 
-const long NUMMASK = 10;
+const long NUMRANDOMIZER = 10;
 
 #endif

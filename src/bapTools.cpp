@@ -22,14 +22,14 @@ void generateBinaryMsg(vector<HAEPtxt>& ptxt, int num){
 
 void generateRandomSumOne(vector<ZZ>& rnd){
     rnd.clear();
-    rnd.resize(NUMMASK);
+    rnd.resize(NUMRANDOMIZER);
     
     ZZ sum;
 
-    for(unsigned long i = 0; i < NUMMASK - 1; i++){
+    for(unsigned long i = 0; i < NUMRANDOMIZER - 1; i++){
         RandomBits(rnd[i], RANDOMBITS);
         sum += rnd[i];
     }
 
-    rnd[NUMMASK] = 1 - sum;
+    rnd[NUMRANDOMIZER - 1] = 1 - sum;
 }

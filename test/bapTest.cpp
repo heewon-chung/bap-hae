@@ -26,6 +26,8 @@ int main(void){
     // Variable for Biometric Authentication Protocol
     vector<HAEPtxt>     iris1, iris2, rnd;
     vector<HAECtxt>     encIris1, encIris2, encRnd;
+    ZZ                  masking;
+    HAECtxt             maskCtxt;
     TIMER               start, end;
     
     // Message Generation
@@ -47,22 +49,22 @@ int main(void){
     end = TOC;
     cout << get_time_us(start, end, 1) << "sec\n";
 
-    cout << "Server: \tComputing Hamming Distance and Masking HAECtxt...";
+    cout << "Server: \tComputing Hamming Distance and Masking Ctxt...";
     start = TIC;
-    // computeHDandMasking();
+    computeHDandMasking(maskCtxt, masking, encIris1, encIris2, rnd, encRnd);
     end = TOC;
     cout << get_time_us(start, end, 1) << "sec\n";
 
-    cout << "Client: \tDecrypting...";
-    start = TIC;
+    // cout << "Client: \tDecrypting...";
+    // start = TIC;
 
-    end = TOC;
-    cout << get_time_us(start, end, 1) << "sec\n";
+    // end = TOC;
+    // cout << get_time_us(start, end, 1) << "sec\n";
 
-    cout << "Server: \tChecking Validity of the Client...";
-    start = TIC;
+    // cout << "Server: \tChecking Validity of the Client...";
+    // start = TIC;
 
-    end = TOC;
-    cout << get_time_us(start, end, 1) << "sec\n";
+    // end = TOC;
+    // cout << get_time_us(start, end, 1) << "sec\n";
 
 }
