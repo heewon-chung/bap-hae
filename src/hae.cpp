@@ -70,22 +70,23 @@ void decrypt(ZZ& decPtxt, const Ctxt& ct, const int& tag, const HAESecKey& sk){
 }
 
 // Decryption for Hamming Distance
-// void decrypt(ZZ& decPtxt, const Ctxt& ct, const vector<int>& tag1, const vector<int>& tag2, const HAESecKey& sk){
-//     assert(tag1.size() == tag2.size());
-//     int numTag = tag1.size(),
-//         tag = 0;
+void decryptForHD(int& decPtxt, const Ctxt& ct, const vector<int>& tag1, const vector<int>& tag2, const HAESecKey& sk){
+    assert(tag1.size() == tag2.size());
+    int numTag = tag1.size(),
+        tag = 0;
 
-//     ZZ ctTag = ct % sk.tagMod;
-//     ctTag %= TAGSPACE;
+    ZZ ctTag = ct % sk.tagMod;
+    ctTag %= TAGSPACE;
 
-//     for(unsigned long i = 0; i < numTag; i++){
-//         int tmpTag = tag1[i] - tag2[i];
-//         tmpTag *= tmpTag;
-//         tag += tmpTag;
-//     }
+    for(unsigned long i = 0; i < numTag; i++){
+        int tmpTag = tag1[i] - tag2[i];
+        tmpTag *= tmpTag;
+        tag += tmpTag;
+    }
 
-//     assert(ctTag == tag);
+    assert(ctTag == tag);
 
-//     decPtxt = ct % sk.msgMod;
-//     decPtxt %= MSGSPACE;
-// }
+    ZZ tmpDec = ct % sk.msgMod;
+    tmpDec %= MSGSPACE;
+    decPtxt = conv<int>(tmpDec);
+}
