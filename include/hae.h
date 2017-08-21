@@ -10,20 +10,24 @@
 #include "param.h"
 #include "crt.h"
 
-#define Ctxt ZZ
+#define HAECtxt ZZ
 
 typedef struct {
-    ZZ msgMod;    // modulus for message space
-    ZZ tagMod;    // modulus for tag space
+    ZZ msgMod;      // modulus for message space
+    ZZ tagMod;      // modulus for tag space
 } HAESecKey; 
+
+typedef struct {
+    int msg;        // message for HAE
+    int tag;        // tag for HAE
+} HAEPtxt;
 
 void generateSecretKey(HAESecKey&);
 
-void encrypt(Ctxt&, const int&, const int&, const HAESecKey&);
-void encrypt(vector<Ctxt>&, const vector<int>&, const vector<int>&, const HAESecKey&);
+void encrypt(HAECtxt&, const HAEPtxt&, const HAESecKey&);
+void encrypt(vector<HAECtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
 
-void decrypt(int&, const Ctxt&, const int&, const HAESecKey&);
-void decrypt(ZZ&, const Ctxt&, const int&, const HAESecKey&);
-void decryptForHD(int&, const Ctxt&, const vector<int>&, const vector<int>&, const HAESecKey&);
+void decrypt(int&, const HAECtxt&, const int&, const HAESecKey&);
+void decryptForHD(int&, const HAECtxt&, const vector<HAEPtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
 
 #endif

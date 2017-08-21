@@ -4,7 +4,7 @@
 #include <NTL/ZZ.h>
 
 #include "param.h"
-#include "generalTools.h"
+#include "bapTools.h"
 #include "hae.h"
 #include "matching.h"
 #include "timeUtils.h"
@@ -24,24 +24,24 @@ int main(void){
     generateSecretKey(secretKey);
 
     // Variable for HAE
-    vector<int>     msg1, tag1, msg2, tag2;
-    vector<Ctxt>    ctxt1, ctxt2;
-    Ctxt            hdCtxt;
-    int             decHD;
-    TIMER           start, end;
+    vector<HAEPtxt>     ptxt1, ptxt2;
+    vector<HAECtxt>     ctxt1, ctxt2;
+    HAECtxt             hdCtxt;
+    int                 decHD;
+    TIMER               start, end;
     
     // Message Generation
     cout << "Generating Secret Key...\n";
-    generateBinaryMsgAndTag(msg1, tag1, NUMBITS);
-    generateBinaryMsgAndTag(msg2, tag2, NUMBITS);
+    generateBinaryMsg(ptxt1, NUMBITS);
+    generateBinaryMsg(ptxt2, NUMBITS);
     
-    long ptxtHD = hammingDistance(msg1, msg2);
+    long ptxtHD = hammingDistance(ptxt1, ptxt2);
 
     // encryption 
     cout << "Encrypting...";
     start = TIC;
-    encrypt(ctxt1, msg1, tag1, secretKey);
-    encrypt(ctxt2, msg2, tag2, secretKey);
+    encrypt(ctxt1, ptxt1, secretKey);
+    encrypt(ctxt2, ptxt2, secretKey);
     end = TOC;
     cout << get_time_us(start, end, 2 * NUMBITS) << "sec\n";
 
@@ -55,7 +55,7 @@ int main(void){
     // decryption
     cout << "Decrypting...";
     start = TIC;
-    decryptForHD(decHD, hdCtxt, tag1, tag2, secretKey);
+    decryptForHD(decHD, hdCtxt, ptxt1, ptxt2, secretKey);
     end = TOC;
     cout << get_time_us(start, end, NUMBITS) << "sec\n\n";
 

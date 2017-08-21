@@ -1,13 +1,13 @@
 #include "matching.h"
 
-long hammingDistance(const vector<int>& msg1, const vector<int>& msg2){
-    assert(msg1.size() == msg2.size());
+long hammingDistance(const vector<HAEPtxt>& ptxt1, const vector<HAEPtxt>& ptxt2){
+    assert(ptxt1.size() == ptxt2.size());
     
-    unsigned long   numBits = msg1.size(),
+    unsigned long   numBits = ptxt1.size(),
                     hammingDistance = 0;
 
     for(unsigned long i = 0; i < numBits; i++){
-        if(msg1[i] != msg2[i]){
+        if(ptxt1[i].msg != ptxt2[i].msg){
             hammingDistance++;
         }
     }
@@ -15,7 +15,7 @@ long hammingDistance(const vector<int>& msg1, const vector<int>& msg2){
     return hammingDistance;
 }
 
-void hammingDistance(Ctxt& hdCtxt, const vector<Ctxt>& ct1, const vector<Ctxt>& ct2){
+void hammingDistance(HAECtxt& hdCtxt, const vector<HAECtxt>& ct1, const vector<HAECtxt>& ct2){
     assert(ct1.size() == ct2.size());
     unsigned long ctxtSize = ct1.size();
 
@@ -25,7 +25,7 @@ void hammingDistance(Ctxt& hdCtxt, const vector<Ctxt>& ct1, const vector<Ctxt>& 
 
     #pragma omp parallel for
     for(unsigned long i = 1; i < ctxtSize; i++){
-        Ctxt tmpCtxt = ct1[i];
+        HAECtxt tmpCtxt = ct1[i];
         tmpCtxt -= ct2[i];
         power(tmpCtxt, tmpCtxt, 2);
         hdCtxt += tmpCtxt;

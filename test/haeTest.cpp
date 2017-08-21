@@ -4,7 +4,7 @@
 #include <NTL/ZZ.h>
 
 #include "param.h"
-#include "generalTools.h"
+#include "bapTools.h"
 #include "hae.h"
 #include "timeUtils.h"
 
@@ -20,33 +20,38 @@ int main(void){
     cout << "\nHomomorphic Authentication Encryption Test Started...\n";
     HAESecKey secretKey;
     // Secret Key Generation
+    cout << "Generating Secret Key...\n";
     generateSecretKey(secretKey);
-
+    
     // Variable for HAE
-    vector<int>     msg, tag;
-    vector<Ctxt>    ctxt;
-    vector<int>     decPtxt(NUMTEST);
-    TIMER           start, end;
+    vector<HAEPtxt>     ptxt;
+    vector<HAECtxt>     ctxt;
+    vector<int>         origMsg, decMsg(NUMTEST);
+    TIMER               start, end;
     
     // Message Generation
-    cout << "Generating Secret Key...\n";
-    generateMsgAndTag(msg, tag, NUMTEST);
+    cout << "Generating Messages...\n";
+    generateRandomPtxt(ptxt, NUMTEST);
     
     // encryption 
-    cout << "Encrypting...\n";
+    cout << "Encrypting...";
     start = TIC;
-    encrypt(ctxt, msg, tag, secretKey);
+    encrypt(ctxt, ptxt, secretKey);
     end = TOC;
     cout << get_time_us(start, end, NUMTEST) << "sec\n";
 
     // decryption
-    cout << "Decrypting...\n";
+    cout << "Decrypting...";
     start = TIC;
     for(unsigned long i = 0; i < NUMTEST; i++){
-        decrypt(decPtxt[i], ctxt[i], tag[i], secretKey);
+        decrypt(decMsg[i], ctxt[i], ptxt[i].tag, secretKey);
     }
     end = TOC;
     cout << get_time_us(start, end, NUMTEST) << "sec\n\n";
 
-    assert(msg == decPtxt);
+
+    for(unsigned long i = 0; i < NUMTEST; i++){
+        origMsg.push_back(ptxt[i].msg);
+    }
+    assert(origMsg == decMsg);
 }

@@ -5,7 +5,7 @@ void generateSecretKey(HAESecKey& sk){
     GenPrime(sk.tagMod, 300);
 }
 
-void encrypt(Ctxt& ctxt, const int& msg, const int& tag, const HAESecKey& sk){
+void encrypt(HAECtxt& ctxt, const HAEPtxt ptxt, const HAESecKey& sk){
     ZZ          rnd1, rnd2;
     vector<ZZ>  residue, prime;
 
@@ -15,16 +15,14 @@ void encrypt(Ctxt& ctxt, const int& msg, const int& tag, const HAESecKey& sk){
     prime.push_back(sk.msgMod);
     prime.push_back(sk.tagMod);
 
-    residue.push_back(rnd1 * MSGSPACE + msg);
-    residue.push_back(rnd2 * TAGSPACE + tag);
+    residue.push_back(rnd1 * MSGSPACE + ptxt.msg);
+    residue.push_back(rnd2 * TAGSPACE + ptxt.tag);
 
     crt(ctxt, prime, residue);
 }
 
-void encrypt(vector<Ctxt>& ctxt, const vector<int>& msg, const vector<int>& tag, const HAESecKey& sk){
-    assert(msg.size() == tag.size());
-
-    int         numCtxt = msg.size();
+void encrypt(vector<HAECtxt>& ctxt, const vector<HAEPtxt>& ptxt, const HAESecKey& sk){
+    int         numCtxt = ptxt.size();
     vector<ZZ>  prime;
 
     ctxt.clear();
@@ -41,14 +39,14 @@ void encrypt(vector<Ctxt>& ctxt, const vector<int>& msg, const vector<int>& tag,
         RandomBits(rnd1, ERRORBND);
         RandomBits(rnd2, ERRORBND);
     
-        residue.push_back(rnd1 * MSGSPACE + msg[i]);
-        residue.push_back(rnd2 * TAGSPACE + tag[i]);
+        residue.push_back(rnd1 * MSGSPACE + ptxt[i].msg);
+        residue.push_back(rnd2 * TAGSPACE + ptxt[i].tag);
     
         crt(ctxt[i], prime, residue);
     }
 }
 
-void decrypt(int& decPtxt, const Ctxt& ct, const int& tag, const HAESecKey& sk){
+void decrypt(int& decPtxt, const HAECtxt& ct, const int& tag, const HAESecKey& sk){
     ZZ ctTag = ct % sk.tagMod;
     ctTag %= TAGSPACE;
 
@@ -59,34 +57,24 @@ void decrypt(int& decPtxt, const Ctxt& ct, const int& tag, const HAESecKey& sk){
     decPtxt = conv<int>(tmpDec);
 }
 
-void decrypt(ZZ& decPtxt, const Ctxt& ct, const int& tag, const HAESecKey& sk){
-    ZZ ctTag = ct % sk.tagMod;
-    ctTag %= TAGSPACE;
-
-    assert(ctTag == tag);
-
-    decPtxt = ct % sk.msgMod;
-    decPtxt %= MSGSPACE;
-}
-
 // Decryption for Hamming Distance
-void decryptForHD(int& decPtxt, const Ctxt& ct, const vector<int>& tag1, const vector<int>& tag2, const HAESecKey& sk){
-    assert(tag1.size() == tag2.size());
-    int numTag = tag1.size(),
+void decryptForHD(int& decPtxt, const HAECtxt& ctxt, const vector<HAEPtxt>& ptxt1, const vector<HAEPtxt>& ptxt2, const HAESecKey& sk){
+    assert(ptxt1.size() == ptxt2.size());
+    int numBits = ptxt1.size(),
         tag = 0;
 
-    ZZ ctTag = ct % sk.tagMod;
+    ZZ ctTag = ctxt % sk.tagMod;
     ctTag %= TAGSPACE;
 
-    for(unsigned long i = 0; i < numTag; i++){
-        int tmpTag = tag1[i] - tag2[i];
+    for(unsigned long i = 0; i < numBits; i++){
+        int tmpTag = ptxt1[i].tag - ptxt2[i].tag;
         tmpTag *= tmpTag;
         tag += tmpTag;
     }
 
     assert(ctTag == tag);
 
-    ZZ tmpDec = ct % sk.msgMod;
+    ZZ tmpDec = ctxt % sk.msgMod;
     tmpDec %= MSGSPACE;
     decPtxt = conv<int>(tmpDec);
 }

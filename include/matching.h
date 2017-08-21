@@ -7,7 +7,7 @@
 
 #include "hae.h"
 
-long hammingDistance(const vector<int>&, const vector<int>&);
-void hammingDistance(Ctxt&, const vector<Ctxt>&, const vector<Ctxt>&);
+long hammingDistance(const vector<HAEPtxt>&, const vector<HAEPtxt>&);
+void hammingDistance(HAECtxt&, const vector<HAECtxt>&, const vector<HAECtxt>&);
 
 #endif
