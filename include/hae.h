@@ -18,8 +18,8 @@ typedef struct {
 } HAESecKey; 
 
 typedef struct {
-    int msg;        // message for HAE
-    int tag;        // tag for HAE
+    ZZ msg;        // message for HAE
+    ZZ tag;        // tag for HAE
 } HAEPtxt;
 
 void generateSecretKey(HAESecKey&);
@@ -27,7 +27,7 @@ void generateSecretKey(HAESecKey&);
 void encrypt(HAECtxt&, const HAEPtxt&, const HAESecKey&);
 void encrypt(vector<HAECtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
 
-void decrypt(int&, const HAECtxt&, const int&, const HAESecKey&);
+void decrypt(ZZ&, const HAECtxt&, const ZZ&, const HAESecKey&);
 void decryptForHD(int&, const HAECtxt&, const vector<HAEPtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
 
 #endif

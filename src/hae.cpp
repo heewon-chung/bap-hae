@@ -46,28 +46,27 @@ void encrypt(vector<HAECtxt>& ctxt, const vector<HAEPtxt>& ptxt, const HAESecKey
     }
 }
 
-void decrypt(int& decPtxt, const HAECtxt& ct, const int& tag, const HAESecKey& sk){
+void decrypt(ZZ& decPtxt, const HAECtxt& ct, const ZZ& tag, const HAESecKey& sk){
     ZZ ctTag = ct % sk.tagMod;
     ctTag %= TAGSPACE;
 
     assert(ctTag == tag);
 
-    ZZ tmpDec = ct % sk.msgMod;
-    tmpDec %= MSGSPACE;
-    decPtxt = conv<int>(tmpDec);
+    decPtxt = ct % sk.msgMod;
+    decPtxt %= MSGSPACE;
 }
 
 // Decryption for Hamming Distance
 void decryptForHD(int& decPtxt, const HAECtxt& ctxt, const vector<HAEPtxt>& ptxt1, const vector<HAEPtxt>& ptxt2, const HAESecKey& sk){
     assert(ptxt1.size() == ptxt2.size());
-    int numBits = ptxt1.size(),
-        tag = 0;
+    int numBits = ptxt1.size();
+    ZZ  tag = conv<ZZ>(0);;
 
     ZZ ctTag = ctxt % sk.tagMod;
     ctTag %= TAGSPACE;
 
     for(unsigned long i = 0; i < numBits; i++){
-        int tmpTag = ptxt1[i].tag - ptxt2[i].tag;
+        ZZ tmpTag = ptxt1[i].tag - ptxt2[i].tag;
         tmpTag *= tmpTag;
         tag += tmpTag;
     }

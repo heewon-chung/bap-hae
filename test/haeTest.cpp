@@ -26,7 +26,7 @@ int main(void){
     // Variable for HAE
     vector<HAEPtxt>     ptxt;
     vector<HAECtxt>     ctxt;
-    vector<int>         origMsg, decMsg(NUMTEST);
+    vector<ZZ>          origMsg, decMsg(NUMTEST);
     TIMER               start, end;
     
     // Message Generation
