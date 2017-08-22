@@ -1,4 +1,4 @@
-#include "bapTools.h"
+#include "generatingTools.h"
 
 void generateRandomPtxt(vector<HAEPtxt>& ptxt, int num){
     ptxt.clear();
@@ -20,6 +20,18 @@ void generateBinaryMsg(vector<HAEPtxt>& ptxt, int num){
     }
 }
 
+void generatingRandomizer(vector<HAEPtxt>& rnd, vector<HAECtxt>& encRnd, const HAESecKey& secretKey){
+    rnd.clear();
+    rnd.resize(NUMRANDOMIZER);
+
+    #pragma omp parallel for
+    for(unsigned long i = 0; i < NUMRANDOMIZER; i++){
+        rnd[i].msg = RandomBits_ZZ(RANDOMBITS) % MSGSPACE;
+        rnd[i].tag = conv<ZZ>(1);
+    }
+    encrypt(encRnd, rnd, secretKey);
+}
+
 void generateRandomSumOne(vector<ZZ>& rnd){
     rnd.clear();
     rnd.resize(NUMRANDOMIZER);
@@ -28,6 +40,7 @@ void generateRandomSumOne(vector<ZZ>& rnd){
 
     for(unsigned long i = 0; i < NUMRANDOMIZER - 1; i++){
         RandomBits(rnd[i], RANDOMBITS);
+        rnd[i] %= MSGSPACE;
         sum += rnd[i];
     }
 

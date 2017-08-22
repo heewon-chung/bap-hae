@@ -15,7 +15,7 @@ long hammingDistance(const vector<HAEPtxt>& ptxt1, const vector<HAEPtxt>& ptxt2)
     return hammingDistance;
 }
 
-void hammingDistance(HAECtxt& hdCtxt, const vector<HAECtxt>& ct1, const vector<HAECtxt>& ct2){
+void hammingDistance(HAECtxt& hdCtxt, const vector<HAECtxt>& ct1, const vector<HAECtxt>& ct2, const HAEEvalKey& evalKey){
     assert(ct1.size() == ct2.size());
     unsigned long ctxtSize = ct1.size();
 
@@ -30,4 +30,5 @@ void hammingDistance(HAECtxt& hdCtxt, const vector<HAECtxt>& ct1, const vector<H
         power(tmpCtxt, tmpCtxt, 2);
         hdCtxt += tmpCtxt;
     }
+    hdCtxt %= evalKey;
 }

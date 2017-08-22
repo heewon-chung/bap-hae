@@ -4,11 +4,11 @@
 #include <NTL/ZZ.h>
 
 #include "param.h"
-#include "bapTools.h"
+#include "generatingTools.h"
 #include "hae.h"
 #include "timeUtils.h"
 
-#define NUMTEST 10
+#define NUMTEST 100
 
 using namespace std;
 using namespace NTL;
@@ -32,13 +32,13 @@ int main(void){
     // Message Generation
     cout << "Generating Messages...\n";
     generateRandomPtxt(ptxt, NUMTEST);
-    
-    // encryption 
+
+    // encryption
     cout << "Encrypting...";
     start = TIC;
     encrypt(ctxt, ptxt, secretKey);
     end = TOC;
-    cout << get_time_us(start, end, NUMTEST) << "sec\n";
+    cout << get_time_us(start, end, NUMTEST) << " ms\n";
 
     // decryption
     cout << "Decrypting...";
@@ -47,7 +47,7 @@ int main(void){
         decrypt(decMsg[i], ctxt[i], ptxt[i].tag, secretKey);
     }
     end = TOC;
-    cout << get_time_us(start, end, NUMTEST) << "sec\n\n";
+    cout << get_time_us(start, end, NUMTEST) << " ms\n\n";
 
 
     for(unsigned long i = 0; i < NUMTEST; i++){

@@ -9,4 +9,5 @@ using namespace std;
 
 void generateRandomPtxt(vector<HAEPtxt>&, int);
 void generateBinaryMsg(vector<HAEPtxt>&, int);
+void generatingRandomizer(vector<HAEPtxt>&, vector<HAECtxt>&, const HAESecKey&);
 void generateRandomSumOne(vector<ZZ>&);
