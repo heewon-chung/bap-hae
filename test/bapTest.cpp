@@ -16,13 +16,13 @@ int main(void){
     srand(time(NULL));
     SetSeed(conv<ZZ>(time(NULL)));
 
-    cout << "\nBiometric Authentication Protocl Test Started...\n";
+    cerr << "\nBiometric Authentication Protocl Test Started...\n";
     // Secret Key Generation
-    cout << "Generating Secret Key...\n";
+    cerr << "Generating Secret Key...\n";
     HAESecKey secretKey;
     generateSecretKey(secretKey);
 
-    cout << "Generating Evaluation Key...\n";
+    cerr << "Generating Evaluation Key...\n";
     HAEEvalKey evalKey;
     generateEvalKey(evalKey, secretKey);
 
@@ -34,43 +34,43 @@ int main(void){
     TIMER               start, end;
     
     // Message Generation
-    cout << "Generating Binary Messages...\n";
+    cerr << "Generating Binary Messages...\n";
     generateBinaryMsg(iris1, NUMBITS);
     generateBinaryMsg(iris2, NUMBITS);
     
     long ptxtHD = hammingDistance(iris1, iris2);
 
-    cout << "\nClient: \tEncrypting Iris for Enrollment... ";
+    cerr << "\nClient: \tEncrypting Iris for Enrollment... ";
     start = TIC;
     enrollment(encIris1, iris1, secretKey);
     end = TOC;
-    cout << get_time_us(start, end, 1) << " ms\n";
+    cerr << get_time_us(start, end, 1) << " ms\n";
 
-    cout << "Client: \tEncrypting Iris for Authentication... ";
+    cerr << "Client: \tEncrypting Iris for Authentication... ";
     start = TIC;
     requestAuthentication(encIris2, rnd, encRnd, iris2, secretKey);
     end = TOC;
-    cout << get_time_us(start, end, 1) << " ms\n";
+    cerr << get_time_us(start, end, 1) << " ms\n";
 
-    cout << "Server: \tComputing Hamming Distance and Masking Ctxt... ";
+    cerr << "Server: \tComputing Hamming Distance and Masking Ctxt... ";
     start = TIC;
     computeHDandMasking(maskCtxt, masking, encIris1, encIris2, rnd, encRnd, evalKey);
     end = TOC;
-    cout << get_time_us(start, end, 1) << " ms\n";
+    cerr << get_time_us(start, end, 1) << " ms\n";
 
-    cout << "Client: \tDecrypting... ";
+    cerr << "Client: \tDecrypting... ";
     start = TIC;
     decryptForHD(decHD, maskCtxt, iris1, iris2, secretKey);
     end = TOC;
-    cout << get_time_us(start, end, 1) << " ms\n";
+    cerr << get_time_us(start, end, 1) << " ms\n";
 
-    cout << "Server: \tChecking Validity of the Client... ";
+    cerr << "Server: \tChecking Validity of the Client... ";
     start = TIC;
     bool result = checkValidity(masking, decHD);
     end = TOC;
-    cout << get_time_us(start, end, 1) << " ms\n\n";
+    cerr << get_time_us(start, end, 1) << " ms\n\n";
 
-    cout << "Original Hamming Distance (plaintext): " << ptxtHD << endl;
-    cout << "Recover Hamming Distance (ciphertext): " << decHD - masking << endl;
-    cout << "Biometric Authentication Protocol Result : " << result << endl;
+    cerr << "Original Hamming Distance (plaintext): " << ptxtHD << endl;
+    cerr << "Recover Hamming Distance (ciphertext): " << decHD - masking << endl;
+    cerr << "Biometric Authentication Protocol Result : " << result << endl;
 }
