@@ -1,8 +1,13 @@
 #include "hae.h"
 
 void generateSecretKey(HAESecKey& sk){
-    GenPrime(sk.msgMod, 300);
-    GenPrime(sk.tagMod, 300);
+    GenPrime(sk.msgMod, 2048);
+    GenPrime(sk.tagMod, 2048);
+}
+
+void generateEvalKey(HAEEvalKey& ek, const HAESecKey& sk){
+    ek = sk.msgMod;
+    ek *= sk.tagMod;
 }
 
 void encrypt(HAECtxt& ctxt, const HAEPtxt ptxt, const HAESecKey& sk){
@@ -38,7 +43,7 @@ void encrypt(vector<HAECtxt>& ctxt, const vector<HAEPtxt>& ptxt, const HAESecKey
     
         RandomBits(rnd1, ERRORBND);
         RandomBits(rnd2, ERRORBND);
-    
+
         residue.push_back(rnd1 * MSGSPACE + ptxt[i].msg);
         residue.push_back(rnd2 * TAGSPACE + ptxt[i].tag);
     
@@ -76,4 +81,25 @@ void decryptForHD(int& decPtxt, const HAECtxt& ctxt, const vector<HAEPtxt>& ptxt
     ZZ tmpDec = ctxt % sk.msgMod;
     tmpDec %= MSGSPACE;
     decPtxt = conv<int>(tmpDec);
+}
+
+// Decryption for Hamming Distance
+void decryptForHD(ZZ& decPtxt, const HAECtxt& ctxt, const vector<HAEPtxt>& ptxt1, const vector<HAEPtxt>& ptxt2, const HAESecKey& sk){
+    assert(ptxt1.size() == ptxt2.size());
+    int numBits = ptxt1.size();
+    ZZ  tag = conv<ZZ>(0);
+
+    ZZ ctTag = ctxt % sk.tagMod;
+    ctTag %= TAGSPACE;
+
+    for(unsigned long i = 0; i < numBits; i++){
+        ZZ tmpTag = ptxt1[i].tag - ptxt2[i].tag;
+        tmpTag *= tmpTag;
+        tag += tmpTag;
+    }
+
+    assert(ctTag == tag);
+
+    decPtxt = ctxt % sk.msgMod;
+    decPtxt %= MSGSPACE;
 }

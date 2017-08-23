@@ -10,7 +10,8 @@
 #include "param.h"
 #include "crt.h"
 
-#define HAECtxt ZZ
+#define HAECtxt     ZZ
+#define HAEEvalKey  ZZ
 
 typedef struct {
     ZZ msgMod;      // modulus for message space
@@ -23,11 +24,13 @@ typedef struct {
 } HAEPtxt;
 
 void generateSecretKey(HAESecKey&);
+void generateEvalKey(HAEEvalKey&, const HAESecKey&);
 
 void encrypt(HAECtxt&, const HAEPtxt&, const HAESecKey&);
 void encrypt(vector<HAECtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
 
 void decrypt(ZZ&, const HAECtxt&, const ZZ&, const HAESecKey&);
 void decryptForHD(int&, const HAECtxt&, const vector<HAEPtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
+void decryptForHD(ZZ&, const HAECtxt&, const vector<HAEPtxt>&, const vector<HAEPtxt>&, const HAESecKey&);
 
 #endif
