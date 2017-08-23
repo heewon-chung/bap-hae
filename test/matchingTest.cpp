@@ -9,7 +9,7 @@
 #include "matching.h"
 #include "timeUtils.h"
 
-#define NUMBITS 2000
+#define NUMBITS 2048
 
 using namespace std;
 using namespace NTL;
