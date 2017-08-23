@@ -1,8 +1,8 @@
 #include "hae.h"
 
 void generateSecretKey(HAESecKey& sk){
-    GenPrime(sk.msgMod, 2048);
-    GenPrime(sk.tagMod, 2048);
+    GenPrime(sk.msgMod, 200);
+    GenPrime(sk.tagMod, 20000);
 }
 
 void generateEvalKey(HAEEvalKey& ek, const HAESecKey& sk){
@@ -97,7 +97,7 @@ void decryptForHD(ZZ& decPtxt, const HAECtxt& ctxt, const vector<HAEPtxt>& ptxt1
         tmpTag *= tmpTag;
         tag += tmpTag;
     }
-
+    
     assert(ctTag == tag);
 
     decPtxt = ctxt % sk.msgMod;
